@@ -21,7 +21,7 @@ R is a programming language that helps people to write code.
 Github is a work space in which we can openly share code, without having update/file issues/errors between different work spaces and to maintain versio control.
 **3. Navigate to my [BIS15L](https://github.com/jmledford3115/BIS15LW2023_jledford) repository on GitHub. Notice that near the bottom there is a nice, clean description of the repository. You want this on your repository! It is built by making edits to the `README.md` file using the RMarkdown conventions. Edit your repository's `README.md` file so that you have a clean informative description, including your email address. Be creative! You don't need to just copy mine. There are lots of examples online.**  
 
-I'll have to figure out how to do this
+Completed
 
 **4. Calculate the following expressions. Be sure to include each one in a separate code chunk.**  
   + 5 - 3 * 2  
@@ -35,6 +35,7 @@ I'll have to figure out how to do this
 ```{r}
 #answer 
  + 8 / 2 * 2  
+
 #2
 ```
   
