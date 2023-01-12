@@ -115,13 +115,14 @@ In order to make the html file, you need to "Knit" the file. Knitting just means
 ```{r}
 #install.packages("tidyverse")
 library("tidyverse")
-
-
+library("ggplot2")
+ggplot(mtcars)
 ```
 
 ```{r}
-#ggplot(mtcars, aes(x = factor(cyl))) +
- #   geom_bar()
+
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar()
 ```
 
 4. Now `knit` the file to html using the knit button at the top of the page.  
