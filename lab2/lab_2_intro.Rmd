@@ -19,11 +19,17 @@ library("jpeg")
 
 ## Review from last time
 ### *With a partner, discuss the following questions*
-1. What is the association between `R` and `R Studio`?  
+1. What is the association between `R` and `R Studio`?
+R studio is a GUI in which it makes R easier to interpret, understand, and write.
 2. What is the association between `github.com` and `GitHub Desktop`?  
+Github desktop is a program that is associated with the website Github.com. 
+It allows for easier access, manipulation, and ability to organize and clone repositories than the website
 3. Why do programmers use `GitHub`?
+it is a program that allows coders to freely manipulate and interact with code, while not dealing with version mismatches. Github also shows hierarchical files which create a history for udpates
 3. What is `R Markdown`? What are the advantages of this format?  
+R markdown is a format for non-coders to view and read.This format can be put into presentations, pdfs, htmls, and other ways for represntation of code.
 4. How do you insert a new code chunk?  
+You look at the top right and see a C+ green button. In that button you are able to see a Rmarkdown file.
 
 ## Homework
 1. Please open `homework 1`.  
