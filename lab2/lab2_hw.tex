@@ -1,0 +1,257 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Lab 2 Homework},
+  pdfauthor={Please Add Your Name Here},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Lab 2 Homework}
+\author{Please Add Your Name Here}
+\date{2023-01-12}
+
+\begin{document}
+\maketitle
+
+\hypertarget{instructions}{%
+\subsection{Instructions}\label{instructions}}
+
+Answer the following questions and complete the exercises in RMarkdown.
+Please embed all of your code and push your final work to your
+repository. Your final lab report should be organized, clean, and run
+free from errors. Remember, you must remove the \texttt{\#} for the
+included code chunks to run. Be sure to add your name to the author
+header above.
+
+Make sure to use the formatting conventions of RMarkdown to make your
+report neat and clean!
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  What is a vector in R?
+\item
+  What is a data matrix in R?
+\item
+  Below are data collected by three scientists (Jill, Steve, Susan in
+  order) measuring temperatures of eight hot springs. Run this code
+  chunk to create the vectors.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{spring\_1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{36.25}\NormalTok{, }\FloatTok{35.40}\NormalTok{, }\FloatTok{35.30}\NormalTok{)}
+\NormalTok{spring\_2 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{35.15}\NormalTok{, }\FloatTok{35.35}\NormalTok{, }\FloatTok{33.35}\NormalTok{)}
+\NormalTok{spring\_3 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{30.70}\NormalTok{, }\FloatTok{29.65}\NormalTok{, }\FloatTok{29.20}\NormalTok{)}
+\NormalTok{spring\_4 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{39.70}\NormalTok{, }\FloatTok{40.05}\NormalTok{, }\FloatTok{38.65}\NormalTok{)}
+\NormalTok{spring\_5 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{31.85}\NormalTok{, }\FloatTok{31.40}\NormalTok{, }\FloatTok{29.30}\NormalTok{)}
+\NormalTok{spring\_6 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{30.20}\NormalTok{, }\FloatTok{30.65}\NormalTok{, }\FloatTok{29.75}\NormalTok{)}
+\NormalTok{spring\_7 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{32.90}\NormalTok{, }\FloatTok{32.50}\NormalTok{, }\FloatTok{32.80}\NormalTok{)}
+\NormalTok{spring\_8 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{36.80}\NormalTok{, }\FloatTok{36.45}\NormalTok{, }\FloatTok{33.15}\NormalTok{)}
+
+\NormalTok{vecofvec }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(spring\_1, spring\_2, spring\_3, spring\_4, spring\_5, spring\_6, spring\_7, spring\_8)}
+
+\NormalTok{matrox }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(vecofvec, }\AttributeTok{nrow =} \DecValTok{8}\NormalTok{, }\AttributeTok{byrow =}\NormalTok{ T)}
+
+\NormalTok{matrox}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       [,1]  [,2]  [,3]
+## [1,] 36.25 35.40 35.30
+## [2,] 35.15 35.35 33.35
+## [3,] 30.70 29.65 29.20
+## [4,] 39.70 40.05 38.65
+## [5,] 31.85 31.40 29.30
+## [6,] 30.20 30.65 29.75
+## [7,] 32.90 32.50 32.80
+## [8,] 36.80 36.45 33.15
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+## v ggplot2 3.4.0      v purrr   1.0.1 
+## v tibble  3.1.8      v dplyr   1.0.10
+## v tidyr   1.2.1      v stringr 1.5.0 
+## v readr   2.1.3      v forcats 0.5.2 
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matrox}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       [,1]  [,2]  [,3]
+## [1,] 36.25 35.40 35.30
+## [2,] 35.15 35.35 33.35
+## [3,] 30.70 29.65 29.20
+## [4,] 39.70 40.05 38.65
+## [5,] 31.85 31.40 29.30
+## [6,] 30.20 30.65 29.75
+## [7,] 32.90 32.50 32.80
+## [8,] 36.80 36.45 33.15
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df\_matrox }\OtherTok{\textless{}{-}} \FunctionTok{as\_data\_frame}\NormalTok{(matrox)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `as_data_frame()` was deprecated in tibble 2.0.0.
+## i Please use `as_tibble()` instead.
+## i The signature and semantics have changed, see `?as_tibble`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if
+## `.name_repair` is omitted as of tibble 2.0.0.
+## i Using compatibility `.name_repair`.
+## i The deprecated feature was likely used in the tibble package.
+##   Please report the issue at <]8;;https://github.com/tidyverse/tibble/issueshttps://github.com/tidyverse/tibble/issues]8;;>.
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  Build a data matrix that has the springs as rows and the columns as
+  scientists.
+\item
+  The names of the springs are 1.Bluebell Spring, 2.Opal Spring,
+  3.Riverside Spring, 4.Too Hot Spring, 5.Mystery Spring, 6.Emerald
+  Spring, 7.Black Spring, 8.Pearl Spring. Name the rows and columns in
+  the data matrix. Start by making two new vectors with the names, then
+  use \texttt{colnames()} and \texttt{rownames()} to name the columns
+  and rows.
+\item
+  Calculate the mean temperature of all eight springs.
+\item
+  Add this as a new column in the data matrix.
+\item
+  Show Susan's value for Opal Spring only.
+\item
+  Calculate the mean for Jill's column only.
+\item
+  Use the data matrix to perform one calculation or operation of your
+  interest.
+\end{enumerate}
+
+\hypertarget{push-your-final-code-to-github}{%
+\subsection{Push your final code to
+GitHub!}\label{push-your-final-code-to-github}}
+
+Please be sure that you check the \texttt{keep\ md} file in the knit
+preferences.
+
+\end{document}

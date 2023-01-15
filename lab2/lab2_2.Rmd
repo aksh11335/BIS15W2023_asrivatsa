@@ -136,9 +136,9 @@ all_harry_potter_matrix
 ## Practice
 1. What are the total earnings for the US and non-US regions?  
 ```{r}
-#NOT WORKING:
+# WORKING:
 totalRow<-colSums(all_harry_potter_matrix)
-totalRow[3]
+totalRow
 
 ```
 
