@@ -22,6 +22,10 @@ At this point, you should have familiarity in RStudio, GitHub, and basic operati
 ## Load the tidyverse
 ```{r message=FALSE, warning=FALSE}
 library("tidyverse")
+#package is a collection of tools that people have assembled that is nice to have
+#tidyverse is VERY NICE-> always gonna load in every session-> gonna have to load/install every time
+#an inherit part of science is reproduceability- be able to produce data 
+#WE DONT USE EXCEL VALUES, use CSV/ cant assume that people have excel files
 ```
 
 ## Data Frames

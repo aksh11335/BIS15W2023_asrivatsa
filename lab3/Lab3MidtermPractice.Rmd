@@ -1,0 +1,50 @@
+---
+title: "Lab 3 Warmup"
+output: html_document
+date: "2023-01-17"
+---
+```{r}
+plantHeight<- c(30.7, 37.6, 28.4, NA, 33.2)
+
+```
+
+```{r}
+plantWeight<- c(4,5.2, 3.7,NA, 4.6)
+```
+
+```{r}
+PreLimMatrixOfWeightHeight<- c(plantHeight,plantWeight)
+MatrixOfWeightHeight<-matrix(PreLimMatrixOfWeightHeight, nrow = 5, byrow = F)
+#If you don't want to organize by rows, put last thing as byrow=false
+#you are tested on whatever methods, and all its possible permutations.
+MatrixOfWeightHeight
+```
+
+```{r}
+TitlesXAxis<-c("plant 1", "plant 2", "plant 3", "plant 4","plant 5")
+TitlesYAxis<- c("height", "weight")
+rownames(MatrixOfWeightHeight)<-TitlesXAxis
+colnames(MatrixOfWeightHeight)<-TitlesYAxis
+MatrixOfWeightHeight
+```
+
+```{r}
+colMeans(MatrixOfWeightHeight, na.rm=T)
+```
+
+
+```{r}
+PlantMeanHeight<-mean(MatrixOfWeightHeight[,1], na.rm = T)
+PlantMeanHeight
+```
+
+```{r}
+PlantMeanWeight<-mean(MatrixOfWeightHeight[,2], na.rm = T)
+MatrixOfWeightHeight
+```
+
+```{r}
+MatrixOfWeightHeight<-rbind(PlantMeanHeight,PlantMeanWeight)
+MatrixOfWeightHeight
+```
+
