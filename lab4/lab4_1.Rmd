@@ -1,4 +1,4 @@
----
+  ---
 title: "Transforming data 1: Dplyr `select()`"
 date: "`r Sys.Date()`"
 output:
@@ -52,12 +52,16 @@ names(fish)
 ## Tidyverse
 The [tidyverse](www.tidyverse.org) is an "opinionated" collection of packages that make workflow in R easier. The packages operate more intuitively than base R commands and share a common organizational philosophy.  
 ![*Data Science Workflow in the Tidyverse.*](tidy-1.png)  
+MOST part of dataSci is to make it Tidy and ready for analysis
 
 ## dplyr
+
+-> rearranges data to be organized
 The first package that we will use that is part of the tidyverse is `dplyr`. `dplyr` is used to transform data frames by extracting, rearranging, and summarizing data such that they are focused on a question of interest. This is very helpful,  especially when wrangling large data, and makes dplyr one of most frequently used packages in the tidyverse. The two functions we will use most are `select()` and `filter()`.  
 
 ## `select()`
 Select allows you to pull out columns of interest from a dataframe. To do this, just add the names of the columns to the `select()` command. The order in which you add them, will determine the order in which they appear in the output.
+
 ```{r}
 names(fish)
 ```
@@ -66,11 +70,16 @@ We are only interested in lakeid and scalelength.
 ```{r}
 select(fish, "lakeid", "scalelength")
 ```
+What if I was only interested in lakeID and annnumber?
+```{r}
+
+select(fish, "lakeid", "annnumber")
+
+#we put quotes around this to make sure they arent considered objects. Rather, we want for them to be considered as variable
+```
 
 To add a range of columns use `start_col:end_col`.
-```{r}
-fish
-```
+
 
 ```{r}
 select(fish, fish_id:length)
@@ -142,42 +151,49 @@ mammals <- readr::read_csv("data/mammal_lifehistories_v2.csv")
 
 1. Use one or more of your favorite functions to assess the structure of the data.  
 ```{r}
-
+glimpse(mammals)
 ```
 
 2. Are there any NAs? Are you sure? Try taking an average of `max. life` as a test.  
 ```{r}
-
+?filter()
+is.na(mammals$`max. life`)
+anyNA(mammals)
+filtered_max_life<-filter(mammals,`max. life`>=0)
+filtered_max_life
+mean(filtered_max_life$`max. life`)
 ```
 
 3. What are the names of the columns in the `mammals` data?
 ```{r}
-
+colnames(mammals)
 ```
 
 4. Rename any columns that have capitol letters or punctuation issues.  
 ```{r}
 
+mammals_rename<-rename(mammals, genus=Genus,  afr="AFR", litters_year="litters/year", max_life="max. life", litter_size="litter size")
+
 ```
 
 5. We are only interested in the variables `genus`, `species`, and `mass`. Use `select()` to build a new dataframe `mass` focused on these variables.
 ```{r}
-
+select(mammals_rename, genus, species, mass)
 ```
 
 6. What if we only wanted to exclude `order` and `family`? Use the `-` operator to make the code efficient.
 ```{r}
-
+select(mammals, -order, -family)
 ```
 
 7. Select the columns that include "mass" as part of the name.  
 ```{r}
-
+select(mammals, contains("mass"))
 ```
 
 8. Select all of the columns that are of class `character`.  
 ```{r}
-
+select_if(mammals, is_character)
 ```
 
 ## Other

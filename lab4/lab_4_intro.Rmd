@@ -20,9 +20,15 @@ library("jpeg")
 ## Review from last time
 ### *With a partner, discuss the following questions*
 1. How is a data frame and how is it different than a data matrix?  
-2. What is the command we use to import .csv files into R?  
-3. Take a moment to show your repository on GitHub to a partner. Can you make any improvements?  
+A data frame is a more tabular version of a data matrix, and they are capable of containing more than 1 type of class.
 
+A data frame is an another form of organization, can store more data, look like spreadsheets, and have multiple class types.
+
+
+2. What is the command we use to import .csv files into R?
+<-readr:: read_csv(*name of the file*)
+3. Take a moment to show your repository on GitHub to a partner. Can you make any improvements?  
+SEEMS GOOD TO ME CHEIF!
 ## Warm-up
 1. In a new R Markdown document, load the tidyverse and a package called `palmerpenguins`.
 2. What are the dimensions of the dataset `penguins`?

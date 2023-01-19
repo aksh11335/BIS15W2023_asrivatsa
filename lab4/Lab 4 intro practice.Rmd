@@ -1,0 +1,52 @@
+---
+title: "Lab 4 practice MIDTERM AAAAAA"
+output: html_document
+date: "2023-01-19"
+---
+
+1. In a new R Markdown document, load the tidyverse and a package called `palmerpenguins`.
+2. What are the dimensions of the dataset `penguins`?
+3. What are the names of the variables in the `penguins` dataset?
+4. How many individuals were sampled on each island in the `penguins` dataset?
+5. What is the mean body mass for all individuals in the `penguins` dataset?
+1)
+
+*note we use tidyverse because it makes things easier to read and understand
+tools->check packages updates=> make sure your packages are up to date 
+
+```{r}
+
+
+library("tidyverse")
+library("palmerpenguins")
+```
+
+2)
+```{r}
+dim(penguins)
+```
+
+3)
+
+```{r}
+colnames(penguins)
+```
+4)
+TABLEfunction (table()) is what we use for counts for qualitative data (like not numbers)
+
+
+```{r}
+table(penguins$island)
+```
+5)
+```{r}
+bdwght<-filter(penguins, !is.na(body_mass_g))
+
+mean(bdwght$body_mass_g)
+view(penguins$body_mass_g)
+
+mean(penguins$body_mass_g, na.rm = T)
+```
+
+
+
