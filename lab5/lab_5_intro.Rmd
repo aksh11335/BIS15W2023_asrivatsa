@@ -20,16 +20,95 @@ library("jpeg")
 ## Review from last time
 ### *With a partner, discuss the following questions*
 1. What are the characteristics of `tidy` data?  
-
+every variable has its own row
+every observation has its own coloumn
+every observation has its own unique values
 
 2. What is the difference between `select` and `filter`?  
-
+Filter operates on rows, while select operates on select applies on coloumns
+seleCt (choosing coloumns)
+filteR (choosing Rows)
 3. When is your first midterm?  
+NEXT TUESDAY AAAAAHHHH
+open book(per printed worksheets)
+
+
+```{r}
+library("tidyverse")
+```
 
 ## Warm-up
 1. Load the bison data.
+
+```{r}
+bison<- readr::read_csv("data/bison.csv")
+```
+
 2. What are the dimesions and structure of the data?
+```{r}
+dim(bison)
+```
+
+```{r}
+str(bison)
+```
+
 3. We are only interested in code, sex, weight, year of birth. Restrict the data to these variables and store the dataframe as a new object.
+```{r}
+#colnames(bison)
+#setNames(bison, animal_sex="sex", )
+
+adjusted_bisons <- bison %>% 
+  select(animal_sex, animal_weight, animal_code, animal_yob)
+
+#adjusted_bisons<-data.frame(select(bison, animal_sex, animal_weight, animal_code, animal_yob ))
+#adjusted_bisons
+```
+
 4. Pull out the animals born between 1980-1990.
+```{r}
+#why doesnt this work
+#apply (bisons,filter(animal_yob>1980&animal_yob<1990 ) )
+born_inbetween <- filter(adjusted_bisons, animal_yob>=1980 & animal_yob<=1990)
+```
+
+```{r}
+#born_inbetween<-filter(adjusted_bisons, 
+filter(adjusted_bisons, between (animal_yob,1980,1990))
+```
+
 5. How many male and female bison are represented between 1980-1990?
+```{r}
+table(born_inbetween$animal_sex)
+```
+
 6. Between 1980-1990, were males or females larger on average?
+```{r}
+males <- born_inbetween %>% 
+  filter(animal_sex=="M")
+```
+
+```{r}
+females <- born_inbetween %>% 
+  filter(animal_sex=="F")
+```
+
+```{r}
+mean(males$animal_weight)
+```
+
+```{r}
+mean(females$animal_weight)
+```
+
+```{r}
+#female_animals<-filter(born_inbetween,animal_sex=="F")
+#male_animals<-filter(born_inbetween,animal_sex=="M")
+
+
+#mean(males$animal_weight, na.rm = T)
+
+#mean(Female_animals$animal_sex, na.rm =T)
+  
+```
+
