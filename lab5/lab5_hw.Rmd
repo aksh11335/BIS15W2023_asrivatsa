@@ -25,6 +25,55 @@ superhero_info <- readr::read_csv("data/heroes_information.csv", na = c("", "-99
 ```{r}
 superhero_powers <- readr::read_csv("data/super_hero_powers.csv", na = c("", "-99", "-"))
 ```
+## Go LOOK AT LAB 5 rmd
+
+
+IT HAS THE COMPLETED HOMEWORK
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Data tidy
 1. Some of the names used in the `superhero_info` data are problematic so you should rename them here.  
