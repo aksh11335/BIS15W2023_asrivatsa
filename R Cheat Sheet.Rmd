@@ -1,0 +1,57 @@
+---
+title: "R Cheat Sheet"
+output: 
+  html_document: 
+    keep_md: yes
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+    theme: spacelab
+    number_sections: yes
+date: "2023-01-28"
+---
+
+
+# Refrence text for formatting and publishing website in R
+[For publishing in R](https://bookdown.org/yihui/rmarkdown/)
+
+# Locating where you are and other basic operations
+Getting working directory using the function `getwd()`
+```{r}
+getwd()
+```
+## Doing aritmatic
+
+You can do arithmatic in R. Order of operations do apply.
+Basic Operations: +, -, /, *
+Note (**) is basically the exponent (^) function
+
+## Creating a vector
+you can create a vector by `x<- c(observation1, obs2, obs3,... )`
+this uses the concatonate function which is c()
+```{r}
+x <- c(4, 6, 8, 5, 6, 7, 7, 7)
+```
+## Installing packages
+You can install things called packages that would help you utilize other functions of R
+Use the function `library (package_name)`
+```{r}
+library("tidyverse")
+```
+# Data types, Checking Data Types
+There are five frequently used `classes` of data: 1. numeric, 2. integer, 3. character, 4. logical, 5. complex.
+```{r}
+my_numeric <- 42
+my_integer <- 2L #adding an L automatically denotes an integer
+my_character <- "universe"
+my_logical <- FALSE
+my_complex <- 2+4i
+```
+You can check if these using the `is.{classType}()` function
+You can also change class types by the `as.{classType}( {variableName} )` function
+
+In R, there can also be data values that don't exist, called NA's
+
+# Statiscal knowledge
+

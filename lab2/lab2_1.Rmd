@@ -118,7 +118,7 @@ R has a special way to designate missing data, the NA. NA values in R have speci
 
 NA values are used to designate missing data. `is.na` or `anyNA` are useful functions when dealing with NAs in data. 
 ```{r}
-my_missing <- NA
+my_missing <- c(NA,1,3,4,1,2,12,12,1,2,12,3,5,6,67)
 ```
 
 ```{r}
