@@ -101,12 +101,13 @@ Problem 8. (4 points) In ducks, how is mean body mass associated with migratory 
 ```{r}
 ducks %>% 
   group_by(migratory_strategy) %>% 
-  mean(log10_mass, na.rm=T)
+  summarise(mean=mean(log10_mass, na.rm=T))
 
 ```
 
 Problem 9. (2 points) Accipitridae is the family that includes eagles, hawks, kites, and osprey. First, make a new object `eagles` that only includes species in the family Accipitridae. Next, restrict these data to only include the variables common_name, scientific_name, and population_size.
 ```{r}
+
 eagles<- ecosphere %>%
           filter(family=="Accipitridae") %>% 
           select(common_name, scientific_name, population_size)
@@ -115,22 +116,41 @@ eagles<- ecosphere %>%
 
 Problem 10. (4 points) In the eagles data, any species with a population size less than 250,000 individuals is threatened. Make a new column `conservation_status` that shows whether or not a species is threatened.
 ```{r}
+eagles %>% 
+  mutate(conservation_status=population_size<250000) 
+?mutate_if
 
 ```
 
 Problem 11. (2 points) Consider the results from questions 9 and 10. Are there any species for which their threatened status needs further study? How do you know?
-```{r}
 
+Yes, if there is no population size, that means we cannot determine whether the status needs study or not. In this case, if there is no observed value, then we can't tell if its threatened.
+```{r}
+eagles %>% 
+  filter(is.na(population_size))
 ```
 
 Problem 12. (4 points) Use the `ecosphere` data to perform one exploratory analysis of your choice. The analysis must have a minimum of three lines and two functions. You must also clearly state the question you are attempting to answer.
-```{r}
 
+Amongst the families available, is there a Strong relationship between eggs per clutch and winter range area?
+
+```{r}
+family_relationship<-ecosphere %>% 
+      group_by(family) %>% 
+      summarise(mean_of_family_eggs_per_clutch=mean(mean_eggs_per_clutch), mean_of_family_winter_range_area=mean(winter_range_area)) %>% 
+      arrange(mean_of_family_winter_range_area)
+
+
+plot(x=family_relationship$mean_of_family_winter_range_area,y = family_relationship$mean_of_family_eggs_per_clutch,
+xlab = "Mean Winter Range",
+     ylab = "Mean Eggs per clutch",
+     main = "Plot of Winter range Area an eggs per clutch")
 ```
 
 Please provide the names of the students you have worked with with during the exam:
 ```{r}
-
+#Gautam Ponugubati
+#Kyle de Mariano
 ```
 
 Please be 100% sure your exam is saved, knitted, and pushed to your github repository. No need to submit a link on canvas, we will find your exam in your repository.
