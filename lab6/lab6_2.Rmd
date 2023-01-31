@@ -33,7 +33,7 @@ As biologists, a good question that we may ask is how do the measured variables 
 ```{r}
 penguins %>% 
   group_by(island) %>% 
-  summarise(meanBodyMass=mean(body_mass_g),mean_bill_length_mm=mean(bill_length_mm,na.rm =T),mean_bill_length_mm= mean(bill_length_mm, na.rm=T))
+  summarise(meanBodyMass=mean(body_mass_g), mean_bill_length_mm=mean(bill_length_mm,na.rm =T),mean_billl_length_mm= mean(bill_length_mm, na.rm=T))
 ```
 
 Why do we have NA here? Do all of these penguins lack data?
