@@ -104,12 +104,13 @@ refocused_fisheries %>%
 8. Which five countries caught the most cephalopods between 2008-2012?
 ```{r}
 refocused_fisheries%>%
-    group_by(country) %>% 
   filter(between(year, 2008,2012)) %>%    
-  filter(asfis_species_name=="Cephalopoda") %>%  
+  filter(asfis_species_name=="Cephalopoda") %>% 
+  group_by(country) %>% 
   summarise(catchTotal=sum(catch)) %>% 
   arrange(-catchTotal) %>% 
   slice_max(catchTotal, n=5)
+#R just knows that the country is by level
 ```
 
 ```{r}
