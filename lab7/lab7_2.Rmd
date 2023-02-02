@@ -163,8 +163,8 @@ life_history <- read_csv("data/mammal_lifehistories_v2.csv")
 1. Do you see any NA's? Try using naniar.
 ```{r}
 ?naniar
-
-replace_with_na_if(life_history,dbl, -999)
+?replace_with_na
+replace_with_na_if(life_history,is.dbl, -999)
 
 
 
