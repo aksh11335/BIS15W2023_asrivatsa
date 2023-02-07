@@ -114,6 +114,9 @@ amniota %>%
 The NA's could represent that the species does not classify in the current species. This could be becuase the species are found in all the states (burrowing, terrestrial, aquatic, and arboreal). These values could be represented as a 0 rather than a NA.
 
 ```{r}
+#or
+# amphibio %>% 
+#   summary(Fos:Arb)
 
    amphibio %>%  
   count(Fos, NA)

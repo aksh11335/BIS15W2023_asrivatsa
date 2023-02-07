@@ -322,6 +322,10 @@ The NA's could represent that the species does not classify in the current speci
 
 
 ```r
+#or
+# amphibio %>% 
+#   summary(Fos:Arb)
+
    amphibio %>%  
   count(Fos, NA)
 ```
