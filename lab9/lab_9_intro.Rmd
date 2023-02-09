@@ -4,6 +4,12 @@ date: "`r Sys.Date()`"
 output: ioslides_presentation
 ---
 
+https://github.com/blengerich/CompBioDatasetsForMachineLearning
+https://www.ncbi.nlm.nih.gov/geo/
+https://www.ncbi.nlm.nih.gov/geo/
+https://epirhandbook.com/en/
+https://www.ebi.ac.uk/biostudies/arrayexpress
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library("tidyverse")
