@@ -7,6 +7,8 @@ output: ioslides_presentation
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library("jpeg")
+library(here)
+library(tidyverse)
 ```
 
 ## Seating & Set-up
@@ -17,5 +19,25 @@ library("jpeg")
 For this warm-up, please use the `heartrate` data. Be sure to label your plots!
 
 1. Make a plot that compares the heartrate of patients for drug a.
+```{r}
+heartrate<-read_csv(here("lab11","data","heartrate.csv"))
+heartrate %>% 
+  select(a,patient) %>%
+  ggplot(aes(patient,a,fill=patient))+
+  geom_col()+
+  labs(title = "heartrate of drug a versus patient A")+
+  xlab(NULL)#null makes the title is non-existant
+```
+
 
 2. Make a plot that compares heartrate (as a range) for each drug.
+
+```{r}
+#View(heartrate)
+
+heartrate2<-heartrate %>% pivot_longer(-patient,names_to = "drug_type", values_to = "heart_rate")
+heartrate2 %>% 
+  ggplot(aes(drug_type,heart_rate,fill=drug_type ))+geom_boxplot()
+
+```
+

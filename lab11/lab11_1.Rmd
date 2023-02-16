@@ -65,16 +65,25 @@ homerange <- read_csv(here("lab10", "data", "Tamburelloetal_HomeRangeDatabase.cs
 1. Use the `homerange` data to make a boxplot that shows the range of `log10.mass` by taxonomic class.
 ```{r}
 
+homerange %>% 
+  ggplot(aes(class,log10.mass))+geom_boxplot()
 ```
 
 2. Now, add a layer to this plot that fills color for each box by taxonomic class
 ```{r}
 
+homerange %>% 
+  ggplot(aes(class,log10.mass,fill=class))+geom_boxplot()
 ```
 
 3. Within each taxonomic class, there are multiple taxa. Show a count of each of these taxa.
 ```{r}
-
+homerange %>% 
+  group_by(class) %>% 
+  count(taxon) %>% 
+  group_by(class)
+  
+  
 ```
 
 ## Using `group`
@@ -106,13 +115,13 @@ deserts2 <- deserts %>% mutate(year=as_factor(year))
 ```
 
 ```{r}
-deserts2 %>% 
+deserts %>% 
   filter(species_id=="DM" | species_id=="DS") %>% 
   group_by(year, species_id) %>% 
   summarise(n=n(), .groups='keep') %>% 
   ggplot(aes(x=year, y=n, group=species_id, color=species_id))+
   geom_line()+
-  geom_point(shape=5)+
+  geom_point(shape=5)+ #every point on the plot gets a shape#5(circle sqr)
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
   labs(title = "Number of samples for species DM & DS",
        x = "Year",
@@ -126,7 +135,7 @@ What does the distribution of body mass look like in the `homerange` data?
 ```{r}
 homerange %>% 
   ggplot(aes(x = log10.mass)) +
-  geom_histogram(alpha = 0.4, color = "black", fill = "deepskyblue4", bins=40)+
+  geom_histogram(alpha = 0.4, color = "black", fill = "deepskyblue4", bins=40)+ #alpha is the darkness of the color in the histogram, color is the border color, and fill is the type of color there is, bins is howmany bins in the diagram
   labs(title = "Distribution of Body Mass")
 ```
 
@@ -156,17 +165,27 @@ homerange %>%
 ## Practice
 1. Make a histogram of `log10.hra`. Make sure to add a title.
 ```{r}
-
+homerange %>% 
+  ggplot(aes(x=log10.hra)) +
+  geom_histogram(aes(y = ..density..), fill = "red", alpha = 0.3, color = "black")+
+  labs(title = "Distribution of hra")
 ```
 
 2. Now plot the same variable using `geom_density()`.
 ```{r}
-
+homerange %>% 
+  ggplot(aes(x = log10.hra)) +
+  geom_density(fill="deepskyblue4", alpha  =0.7, color = "black")+
+  labs(title = "Distribution of Body Mass")
 ```
 
 3. Combine them both!
 ```{r}
-
+homerange %>% 
+  ggplot(aes(x=log10.mass)) +
+  geom_histogram(aes(y = ..density..), fill = "deepskyblue4", alpha = 0.4, color = "black")+
+  geom_density(color = "red")+
+  labs(title = "Distribution of Body Mass")
 ```
 
 ## Create Categories with mutate and case_when()
@@ -188,7 +207,8 @@ summary(homerange$log10.mass)
 
 ```{r}
 homerange <- homerange %>% 
-             mutate(mass_category = case_when(log10.mass <= 1.75 ~ "small",
+             mutate(mass_category = 
+                      case_when(log10.mass <= 1.75 ~ "small",
                                               log10.mass > 1.75 & log10.mass <= 2.75 ~ "medium",
                                               log10.mass > 2.75 ~ "large"))
 ```
@@ -223,11 +243,31 @@ table(quartiles)
 2. How many and which taxonomic classes are represented in each of the `range_category` classes?
 ```{r}
 
+  homerange2<-homerange %>% 
+             mutate(range_category = 
+                      case_when(log10.hra <= 3.65 ~ "small",
+                     log10.mass > 3.65 & log10.mass <= 4.59 ~ "medium",
+                       log10.mass > 6.02 ~ "large")) 
+  
+  homerange2 %>% 
+  group_by(range_category) %>% 
+  count()
 ```
 
 3. Isolate the small `range_category` and plot the range of `log10.mass` by taxonomic class.
 ```{r}
+homerange2 %>% 
+  select(range_category, log10.mass,class) %>%
+  filter(!is.na(log10.mass)  &!is.na(range_category)) %>% 
+  ggplot(aes(range_category, log10.mass,fill=class))+geom_col()
+```
 
+```{r}
+  
+homerange2 %>% 
+  filter(range_category=="small") %>%
+  ggplot(aes(range_category,log10.mass,fill=class))+
+  geom_boxplot()
 ```
 
 ## That's it, let's take a break!  
