@@ -107,6 +107,7 @@ Access the help for `RColorBrewer`.
 The thing to notice is that there are three different palettes: 1) sequential, 2) diverging, and 3) qualitative. Within each of these there are several selections. You can bring up the colors by using `display.brewer.pal()`. Specify the number of colors that you want and the palette name.
 ```{r}
 display.brewer.pal(4,"GnBu")
+#number is the number ofshades and letters are the pallete
 ```
 
 The [R Color Brewer](http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) website is very helpful for getting an idea of the color palettes. To make things easy, use these two guidelines:
@@ -134,10 +135,11 @@ colors <- paletteer::palettes_d_names
 Now we can display the palettes. Assign the palette to `my_palette` and then build this base R bar plot. There are a lot of options; `paleteer` is a collection of popular palettes. I really like the [`ggsci` package] (https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html)
 ```{r}
 my_palette <- paletteer_d("ggprism::flames")
+my_palette2 <- paletteer_d("beyonce::X6")
 ```
 
 ```{r}
-barplot(rep(1,14), axes=FALSE, col=my_palette)
+barplot(rep(1,14), axes=FALSE, col=my_palette2)
 ```
 
 Now we just identify `my_palette` as part of `scale_fill_manual()`
@@ -156,7 +158,7 @@ There are many options for adjusting the x and y axes. For details, look over ex
 ```{r}
 homerange %>% 
   ggplot(aes(x = log10.mass, y = log10.hra, color = locomotion)) +
-  geom_point() +
+  geom_point(na.rm = T) + #na.rm=T is how to remove the plot
   xlim(0, 4) +
   ylim(1, 6)
 ```
@@ -164,10 +166,26 @@ homerange %>%
 ## Practice
 1. Revisit the relationship between mass and homerange using a scatterplot, but color the points by taxonomic class using a custom color theme.
 ```{r}
-
+ # names(homerange)
+plotter<-homerange %>% 
+  ggplot(aes(x=log10.mass, y=log10.hra, color=class))+geom_point()
+  
 ```
 
+
+
+```{r}
+  # plotter+scale_fill_distiller(palette = my_palette2)
+                  #make sure to use scale color brewer
+plotter+scale_colour_brewer(palette = "YlGn")
+                  
+```
+
+
 2. Build bar plots that show the representation by taxonomic class with carnivores and herbivores. Try using a color theme that matches your scatterplot to keep everything consistent.
+
+
+saldjaklsdjaljdlaj TO DO
 ```{r}
 
 ```
@@ -265,14 +283,25 @@ ecosphere %>%
 ```
 
 ## Practice
-1. Build a faceted plot that shows a distribution of life expectancy by habitat type.
+1. Build a faceted plot that shows a distribution of life expectancy(no log 10 mass** correction) by habitat type.
 ```{r}
-
+names(ecosphere)
+ecosphere %>% 
+  ggplot(aes(x=log10_mass))+
+  geom_density()+ 
+  facet_grid(.~habitat, scales = "free_x")# the ~. is a row coloumn format
++theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
 2. Try the same plot as #1 above, but include life_expectancy~habitat.
-```{r}
 
+```{r}
+names(ecosphere)
+ecosphere %>% 
+  ggplot(aes(x=log10_mass))+
+  geom_density()+ 
+  facet_grid(life_expectancy~habitat, scales = "free_x") 
++theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
 ## That's it, let's take a break!   
