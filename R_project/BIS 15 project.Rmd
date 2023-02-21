@@ -1,0 +1,45 @@
+Based on 2022 paper, "" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
+
+-overall rumination rates
+ -difference by ethnicity
+                income
+                age
+                religion 
+                gender
+                education
+                *trauma type (for PTSD)
+
+
+```{r}
+library(here)
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(skimr)
+
+```
+
+```{r}
+depress<-read_csv(here("R_project", "Rumination Depression.csv")) %>% clean_names
+```
+
+
+```{r}
+ptsd<-read_csv(here("R_project","Rumination PTSD.csv")) %>% clean_names
+```
+```{r}
+glimpse (ptsd)
+```
+```{r}
+naniar::miss_var_summary(depress)
+```
+
+
+```{r}
+glimpse(ptsd)
+```
+```{r}
+naniar::miss_var_summary(ptsd)
+```
+
+
