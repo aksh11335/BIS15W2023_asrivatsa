@@ -1,7 +1,21 @@
 Heres practice:
 
 push and pull code:
+
 ```{r}
+library(here)
+```
+
+```{r}
+theData<-read_csv(here("R_project", "Rumination Depression.csv"))
+```
+
+
+```{r}
+theData2<-read_csv(here("R_project","Rumination PTSD.csv"))
+
+theData2
 
 ```
+
 
