@@ -1,7 +1,7 @@
 ---
 title: "Lab 11 Homework"
 author: "Akshanth Srivatsa"
-date: "2023-02-20"
+date: "2023-02-21"
 output:
   html_document: 
     theme: spacelab
@@ -82,6 +82,7 @@ years_52To_07<-gapminder %>%
 ```
 
 
+
 ```r
 years_52To_07 %>% 
   ggplot(aes(group=year,x=year, y=lifeExp, fill=year))+geom_col()
@@ -130,9 +131,9 @@ gapminder %>%
 gapminder %>% 
   select(continent, year, lifeExp) %>%
   group_by(continent) %>% 
-  mutate(year=as.factor(year)) %>% 
+   mutate(year=as.factor(year)) %>% 
    ggplot(aes(x=lifeExp, y=year, fill=continent ))+geom_boxplot(alpha=0.5) +facet_grid(continent~.)+
-  theme(axis.text.y = element_text(angle = 15,size = 6))
+  theme(axis.text.y = element_text(angle = 15,size = 6))+coord_flip()
 ```
 
 ![](lab11_hw_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
@@ -141,7 +142,7 @@ gapminder %>%
 
 ```r
 gapminder %>%  
-  mutate(continent=as.factor(continent)) %>% 
+  # mutate(continent=as.factor(continent)) %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp,color=continent))+ geom_point()+facet_grid(continent~.)
 ```
 

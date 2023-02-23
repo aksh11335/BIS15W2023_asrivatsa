@@ -52,7 +52,9 @@ colSums(is.na(gapminder))
 
 years_52To_07<-gapminder %>% 
   filter(between(year, 1952, 2007))
+
 ```
+
 
 ```{r}
 
@@ -85,15 +87,16 @@ gapminder %>%
 gapminder %>% 
   select(continent, year, lifeExp) %>%
   group_by(continent) %>% 
-  mutate(year=as.factor(year)) %>% 
+   mutate(year=as.factor(year)) %>% 
    ggplot(aes(x=lifeExp, y=year, fill=continent ))+geom_boxplot(alpha=0.5) +facet_grid(continent~.)+
-  theme(axis.text.y = element_text(angle = 15,size = 6))
+  theme(axis.text.y = element_text(angle = 15,size = 6))+coord_flip()
+
 ```
 
 **6. We are interested in the relationship between per capita GDP and life expectancy; i.e. does having more money help you live longer?**
 ```{r}
 gapminder %>%  
-  mutate(continent=as.factor(continent)) %>% 
+  # mutate(continent=as.factor(continent)) %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp,color=continent))+ geom_point()+facet_grid(continent~.)
 
 ```

@@ -27,9 +27,11 @@ depress<-read_csv(here("R_project", "Rumination Depression.csv")) %>% clean_name
 ```{r}
 ptsd<-read_csv(here("R_project","Rumination PTSD.csv")) %>% clean_names
 ```
+
 ```{r}
 glimpse (ptsd)
 ```
+
 ```{r}
 naniar::miss_var_summary(depress)
 ```
