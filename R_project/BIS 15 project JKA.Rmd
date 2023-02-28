@@ -1,0 +1,145 @@
+Based on 2022 paper, "" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
+
+-overall rumination rates
+ -difference by culture
+                income
+                age
+                religion 
+                gender
+                education
+                *trauma type (for PTSD)
+
+
+```{r}
+library(here)
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(skimr)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(paletteer)
+
+```
+
+```{r}
+dep<-read_csv(here("jka_r_project", "rum_depress_jka.csv")) %>% clean_names
+```
+```{r}
+my_palette <- paletteer_d("ggprism::stained_glass2")
+```
+
+
+```{r}
+ptsd<-read_csv(here("jka_r_project", "rum_ptsd_jka.csv")) %>% clean_names
+```
+
+```{r}
+glimpse (dep)
+```
+```{r}
+na.omit(dep)
+```
+```{r}
+select()
+```
+
+
+Below is how I identified culture = 0 as Australian, based on the averge ages of the two groups in the first table of the paper. 
+
+```{r}
+dep %>% 
+  filter(culture==0) %>% 
+  summarize(max_age = max(age, na.rm =T),
+            min_age = min(age,na.rm =T),
+            avg_age = mean(age,na.rm =T),
+            total = n())
+```
+```{r}
+dep %>% 
+  select(id, xpcult, gender, age)
+```
+
+This shows that the first 109 study participants were Australian, with the remainder being Malaysian. At id 109, culture changes from 0 to 1.  
+
+```{r}
+
+dep$xpcult <- ifelse(dep$culture == 0, "Euro-Australian", "Malaysian")
+dep$xpcult
+```
+
+```{r}
+dep$bingen <- ifelse(dep$gender == 1, "M", "F")
+dep$bingen
+```
+
+
+```{r}
+glimpse(dep)
+```
+```{r}
+dep %>% 
+  na.omit() %>% 
+  select(age, bingen, education, xpcult, religion_coded, depression_total, anxiety_total, brooding_total)
+```
+
+
+
+```{r}
+dep %>% 
+  filter(between(religion_coded, 0, 6))%>% 
+         group_by(xpcult) %>% 
+  summarize(avg_brood = mean(brooding_total)) %>% 
+  ggplot(aes(x = xpcult, y = avg_brood, fill = xpcult))+
+  geom_col(alpha=0.5)+
+  scale_fill_manual(values=my_palette)+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
+  labs(title = "Brooding by Culture",
+       x = "Culture",
+       y = "Average Brooding",
+       fill = "Culture")
+```
+
+
+```{r}
+dep %>% 
+  mutate(education = as.factor(education)) %>% 
+  group_by(education) %>% 
+  summarize(avg_brood = as.factor(mean(brooding_total))) %>% 
+  ggplot(aes(x = education, y = avg_brood, fill = education))+
+  geom_col(alpha=0.5)+
+  scale_fill_manual(values=my_palette)+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
+  labs(title = "Brooding by Education",
+       x = "Education",
+       y = "Average Brooding")
+
+```
+
+```{r}
+
+
+```
+
+
+```{r}
+glimpse(ptsd)
+```
+
+
+
+
+```{r}
+glimpse(ptsd)
+```
+
+```{r}
+names(ptsd)
+```
+
+
