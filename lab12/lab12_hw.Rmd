@@ -68,7 +68,7 @@ server <- function(input, output, session) {
     UC_admit %>% 
     filter(Academic_Yr==input$x & Campus==input$y & Category==input$z) %>% 
     ggplot(aes(x=reorder(Ethnicity, FilteredCountFR), y=FilteredCountFR)) + 
-      geom_col(color="black", fill="steelblue", alpha=0.75) +
+      geom_density_2d(color="black", fill="steelblue", alpha=0.75) +
       theme_light(base_size = 18) +
       theme(axis.text.x = element_text(angle = 60, hjust = 1))+
       labs(x = "Ethnicity", y = "Number")
@@ -113,7 +113,7 @@ server <- function(input, output, session) {
     UC_admit %>% 
     filter(Campus==input$x & Ethnicity==input$y & Category==input$z) %>% 
     ggplot(aes(x=Academic_Yr, y=FilteredCountFR)) + 
-      geom_col(color="black", fill="steelblue", alpha=0.75) +
+      geom_point(color="black", fill="steelblue", alpha=0.75) +
       theme_light(base_size = 18) +
       theme(axis.text.x = element_text(angle = 60, hjust = 1))+
       labs(x = "Year", y = "Enrollment")
@@ -194,6 +194,7 @@ names(wolves)
 
 2. For the app, here is a faceted version of what we are looking for. We want the reactive part to be `pop` and you should use `shinydashboard`.
 ```{r}
+view(wolves)
 wolves %>% 
   filter(sex!="NA") %>%  
   ggplot(aes(x=sex, fill=sex))+
@@ -201,22 +202,23 @@ wolves %>%
   facet_wrap(~pop)
 unique(wolves$pop)
 ```
+THIS ONE WORKS!!! no clue why
 ```{r}
 ui <- fluidPage(    
   
-  titlePanel("Population of Wolves"), # give the page a title
+  titlePanel("Wolf population plot"), # give the page a title
   
   # generate a row with a sidebar
   sidebarLayout(      
     
   # define the sidebar with one input
   sidebarPanel(
-  selectInput("pop", " Select Taxon of Interest:", choices=unique(wolves$pop)), hr(),
-  helpText("Reference: Tamburello N, Cote IM, Dulvy NK (2015) Energy and the scaling of animal space use. The American Naturalist 186(2):196-211.")),
+  selectInput("taxon", " Select Wolf pop:", choices=unique(wolves$pop)), hr(),
+  helpText("Reference: pop wolves from https://doi.org/10.5061/dryad.5hqbzkh51")),
     
   # create a spot for the barplot
   mainPanel(
-  plotOutput("wolvesPopulationPlot"))
+  plotOutput("taxonPlot"))#I have no idea why but changing this line of code makes the graph not appear on my computer soooo dw bout it
   )
   )
 
@@ -230,8 +232,89 @@ ui <- fluidPage(
   output$taxonPlot <- renderPlot({
     
     wolves %>% 
-    filter(pop == input$pop) %>% 
-    ggplot(aes(x=log10.hra)) + 
+    filter(pop == input$taxon) %>% 
+    ggplot(aes(x=sex)) + 
+    geom_bar(color="black", fill="red", alpha=0.6)
+  })
+  }
+
+shinyApp(ui, server)
+```
+
+
+does not work, no clue why
+```{r}
+
+
+ui <- dashboardPage(
+  dashboardHeader(title = "Relative Abundance"),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+    fluidRow(
+      
+      box(title = "Plot Options", width = 3,
+          selectInput("pop", "Select population",choices = c(unique(wolves$pop)), 
+                      selected = wolves$pop[1]),
+              hr(),
+              helpText("wolf Populations")
+      ), # close the first box
+      box(
+        title = "Relative Abundance %", width = 6,
+          plotOutput("plot", width = "600px", height = "500px")
+      ) # close the second box
+    ) # close the row
+  ) # close the dashboard body
+) # close the ui
+
+server <- function(input, output, session) { 
+  
+  output$plot <- renderPlot(
+    {
+      wolves %>% 
+          filter(pop==input$pop&!is.na(sex)) %>% 
+      ggplot(aes_string(x = sex, fill=sex)) +geom_bar(na.rm = T)
+      # geom_smooth(method=lm, se=T)+
+      # scale_x_continuous(breaks=seq(0, 30, by = 5))+ theme_light(base_size = 18)
+  })
+  
+  # stop the app when we close it
+  session$onSessionEnded(stopApp)
+  }
+
+shinyApp(ui, server)
+```
+
+```{r}
+ui <- fluidPage(    
+  
+  titlePanel("Wolf population plot"), # give the page a title
+  
+  # generate a row with a sidebar
+  sidebarLayout(      
+    
+  # define the sidebar with one input
+  sidebarPanel(
+  selectInput("taxon", " Select Wolf pop:", choices=unique(wolves$pop)), hr(),
+  helpText("Reference: pop wolves from https://doi.org/10.5061/dryad.5hqbzkh51")),
+    
+  # create a spot for the barplot
+  mainPanel(
+  plotOutput("taxonPlot"))#I have no idea why but changing this line of code makes the graph not appear on my computer soooo dw bout it
+  )
+  )
+
+  # define a server for the Shiny app
+  server <- function(input, output, session) {
+  
+  # this stops the app upon closing
+  session$onSessionEnded(stopApp)
+  
+  # fill in the spot we created for a plot
+  output$taxonPlot <- renderPlot({
+    
+    wolves %>% 
+    filter(pop == input$taxon) %>% 
+    ggplot(aes(x=sex)) + 
     geom_bar(color="black", fill="red", alpha=0.6)
   })
   }
