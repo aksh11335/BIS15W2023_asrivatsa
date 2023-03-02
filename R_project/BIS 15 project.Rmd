@@ -1,15 +1,59 @@
-Based on 2022 paper, "" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
+Based on 2022 paper, "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0278328" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
 
 -overall rumination rates
- -difference by ethnicity
+ -difference by age... to overal rumination rates (brooding total)
+ 
+ Facet by culture(only 2 diff cultures mala and euro australian)
+              
                 income
                 age
+              *trauma type (for PTSD)
+                
+                Mine to do:
                 religion 
                 gender
-                education
-                *trauma type (for PTSD)
+                education(on a 1-5 scale )
+                
+Gender:              
+ M=1
+ F=2
+Declined to state  =5  
+
+Culture:  
+Australian = 0
+Malaysian = 1
+
+Education (Highest level achieved):
+Secondary = 1
+Post-secondary = 2
+Undergrad degree = 3
+Graduate degree = 4
+Other = 5
+
+Religion code (for depression dataset):
+None = 1
+Christian = 2
+Muslim = 3
+Buddhist/Taoist = 4
+Hindu = 5
+Other (incl Sikh, Agnostic) = 6
+
+Index trauma type (what the PTSD is thought to be in response to; for PTSD dataset):
+Accident/serious injury/illness = 1
+Non-sexual assault/abuse = 2
+Sexual assault/abuse = 3
+Witnessing death = 4
+War/natural disaster = 5
+Other = 6                
 
 
+
+ptsd data >> DO NOT LOOK AT "HADS"
+>we want to look at pts (pcl 1 is q 1) total and if that value is above a certian value, then they have ptsd>> mutate boolean t/f 
+>rrs is the brooding score sum the total and *maybe* append to depress to see total brooding score with depress  
+
+So we are looking at rumination rates in the Y axis, and X axis is relig, gender, education...
+and we have a facet of culture
 ```{r}
 library(here)
 library(tidyverse)
@@ -40,8 +84,16 @@ naniar::miss_var_summary(depress)
 ```{r}
 glimpse(ptsd)
 ```
+
+
 ```{r}
 naniar::miss_var_summary(ptsd)
+```
+```{r}
+depress %>% 
+  summary(culture)
+  ggplot(aes(x=age, y=mean(brooding_total, na.rm=T)))+geom_col(na.rm = T)+facet_wrap(culture~.)
+
 ```
 
 
