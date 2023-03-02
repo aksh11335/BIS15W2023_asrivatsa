@@ -84,6 +84,7 @@ shinyApp(ui, server)
 
 **3. Make alternate version of your app above by tracking enrollment at a campus over all of the represented years while allowing users to interact with campus, category, and ethnicity.**
 ```{r}
+
 UC_admit$Academic_Yr <- as.factor(UC_admit$Academic_Yr)
 
 ui <- dashboardPage(
@@ -184,7 +185,7 @@ Let's try to build an app that allows users to explore sexual composition of wol
 
 1. Start by loading and exploring the data.
 ```{r}
-wolves <- read_csv("data/wolves_data/wolves_dataset.csv")
+wolves <- readr::read_csv("data/wolves_data/wolves_dataset.csv")
 ```
 
 ```{r}
@@ -194,10 +195,51 @@ names(wolves)
 2. For the app, here is a faceted version of what we are looking for. We want the reactive part to be `pop` and you should use `shinydashboard`.
 ```{r}
 wolves %>% 
-  filter(sex!="NA") %>% 
+  filter(sex!="NA") %>%  
   ggplot(aes(x=sex, fill=sex))+
   geom_bar()+
   facet_wrap(~pop)
+unique(wolves$pop)
 ```
+```{r}
+ui <- fluidPage(    
+  
+  titlePanel("Population of Wolves"), # give the page a title
+  
+  # generate a row with a sidebar
+  sidebarLayout(      
+    
+  # define the sidebar with one input
+  sidebarPanel(
+  selectInput("pop", " Select Taxon of Interest:", choices=unique(wolves$pop)), hr(),
+  helpText("Reference: Tamburello N, Cote IM, Dulvy NK (2015) Energy and the scaling of animal space use. The American Naturalist 186(2):196-211.")),
+    
+  # create a spot for the barplot
+  mainPanel(
+  plotOutput("wolvesPopulationPlot"))
+  )
+  )
+
+  # define a server for the Shiny app
+  server <- function(input, output, session) {
+  
+  # this stops the app upon closing
+  session$onSessionEnded(stopApp)
+  
+  # fill in the spot we created for a plot
+  output$taxonPlot <- renderPlot({
+    
+    wolves %>% 
+    filter(pop == input$pop) %>% 
+    ggplot(aes(x=log10.hra)) + 
+    geom_bar(color="black", fill="red", alpha=0.6)
+  })
+  }
+
+shinyApp(ui, server)
+```
+
+
+
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 
