@@ -240,8 +240,48 @@ ui <- fluidPage(
 
 shinyApp(ui, server)
 ```
+dashboard version:
+```{r}
+ui <- dashboardPage(
+  dashboardHeader(title = "Relative Abundance"),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+    fluidRow(  
+  
+  titlePanel("Wolf population plot"), # give the page a title
+  
+  # generate a row with a sidebar
+  sidebarLayout(      
+    
+  # define the sidebar with one input
+  sidebarPanel(
+  selectInput("taxon", " Select Wolf pop:", choices=unique(wolves$pop)), hr(),
+  helpText("Reference: pop wolves from https://doi.org/10.5061/dryad.5hqbzkh51")),
+    
+  # create a spot for the barplot
+  mainPanel(
+  plotOutput("taxonPlot"))#I have no idea why but changing this line of code makes the graph not appear on my computer soooo dw bout it
+  )))
+  )
 
+  # define a server for the Shiny app
+  server <- function(input, output, session) {
+  
+  # this stops the app upon closing
+  session$onSessionEnded(stopApp)
+  
+  # fill in the spot we created for a plot
+  output$taxonPlot <- renderPlot({
+    
+    wolves %>% 
+    filter(pop == input$taxon&!is.na(sex)) %>% 
+    ggplot(aes(x=sex)) + 
+    geom_bar(color="black", fill="red", alpha=0.6)
+  })
+  }
 
+shinyApp(ui, server)
+```
 does not work, no clue why
 ```{r}
 
@@ -284,43 +324,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r}
-ui <- fluidPage(    
-  
-  titlePanel("Wolf population plot"), # give the page a title
-  
-  # generate a row with a sidebar
-  sidebarLayout(      
-    
-  # define the sidebar with one input
-  sidebarPanel(
-  selectInput("taxon", " Select Wolf pop:", choices=unique(wolves$pop)), hr(),
-  helpText("Reference: pop wolves from https://doi.org/10.5061/dryad.5hqbzkh51")),
-    
-  # create a spot for the barplot
-  mainPanel(
-  plotOutput("taxonPlot"))#I have no idea why but changing this line of code makes the graph not appear on my computer soooo dw bout it
-  )
-  )
 
-  # define a server for the Shiny app
-  server <- function(input, output, session) {
-  
-  # this stops the app upon closing
-  session$onSessionEnded(stopApp)
-  
-  # fill in the spot we created for a plot
-  output$taxonPlot <- renderPlot({
-    
-    wolves %>% 
-    filter(pop == input$taxon) %>% 
-    ggplot(aes(x=sex)) + 
-    geom_bar(color="black", fill="red", alpha=0.6)
-  })
-  }
-
-shinyApp(ui, server)
-```
 
 
 
