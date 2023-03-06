@@ -1,0 +1,267 @@
+Based on 2022 paper, "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0278328" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
+Brooding/RRS rates & culture with: 
+
+Akshanth:      religion, gender, education(1-5; change to factors) 
+
+JKA:           depression, anxiety, age, trauma type for PTSD
+
+
+----------------------------------------------------------------------------------------------
+
+Data codes for variables of interest from paper:
+
+For both: First 109 participant ids are Euro-Australian, next 144 are Malaysian
+
+For depression data:
+
+2 Cultures:  0,1 = Euro-Australian, Malaysian (convert to factors)
+
+Gender (convert to factors):              
+ M = 1
+ F = 2
+Declined to state = 5  
+
+Education (Highest level achieved):
+Secondary = 1
+Post-secondary = 2
+Undergrad degree = 3
+Graduate degree = 4
+Other = 5
+
+Religion codes:
+None = 1
+Christian = 2
+Muslim = 3
+Buddhist/Taoist = 4
+Hindu = 5
+Other (incl Sikh, Agnostic) = 6
+
+PTSD dataset:
+
+Culture = Groups 1,2  = Euro-Australian, Malaysian (change to factors)
+
+Index trauma type (what the PTSD is thought to be in response to):
+
+Accident/serious injury/illness = 1
+Non-sexual assault/abuse = 2
+Sexual assault/abuse = 3
+Witnessing death = 4
+War/natural disaster = 5
+Other = 6       
+
+HADS = Hospital Anxiety and Depression Scale: 
+
+had_sdep = depression subscale total
+had_sanx = anxiety subscale total
+had_stotal = overall HADS total
+
+pts_dtotal = overall score on PTSD assessment scale
+
+RRS-B = Brooding scale - want sum of all RRS scores
+
+```{r}
+library(here)
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(skimr)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(paletteer)
+```
+```{r}
+my_palette <- paletteer::paletteer_d(("ggprism::colors"))
+```
+
+```{r}
+dep<-read_csv(here("jka_r_project", "rum_depress_jka.csv")) %>% clean_names
+```
+
+```{r}
+ptsd<-read_csv(here("jka_r_project", "rum_ptsd_jka.csv")) %>% clean_names
+```
+
+```{r}
+glimpse (dep)
+```
+
+````{r}
+dep$culture <- as.factor(dep$culture)
+class(dep$culture)
+```
+
+
+```{r}
+dep %>% 
+  filter(culture==0) %>% 
+  summarize(max_age = max(age, na.rm =T),
+            min_age = min(age,na.rm =T),
+            avg_age = mean(age,na.rm =T),
+            total = n())
+```
+
+```{r}
+dep %>% 
+  filter(culture==1) %>% 
+  summarize(max_age = max(age, na.rm =T),
+            min_age = min(age,na.rm =T),
+            avg_age = mean(age,na.rm =T),
+            total = n())
+```
+
+```{r}
+dep <- dep %>% 
+  mutate(age_cat = case_when(age < 21 ~ "teens",
+                             age >= 21 & age < 25 ~ "earlytwens",
+                             age >= 25 & age < 30 ~ "latetwens",
+                             age >= 30 & age < 35 ~ "earlythirs",
+                             age >= 35 & age < 40 ~ "latethirs",
+                             age >= 40 & age < 45 ~ "earlyfors",
+                             age >= 45 & age < 50 ~ "latefors",
+                             age >= 50 & age < 55 ~ "earlyfifs",
+                             age >= 55 & age < 60 ~ "latefifs",
+                             age >= 60 ~ "sixties"))
+```
+
+```{r}
+dep %>%
+  na.omit() %>%
+  group_by(culture, age_cat) %>%
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
+  select(culture, age_cat, avg_brood)
+```
+
+
+
+
+```{r}
+dep %>%
+na.omit() %>%
+group_by(age_cat, culture) %>%
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
+ggplot(aes(x = age_cat, y = avg_brood, fill = age_cat)) +
+geom_col(position = "dodge", alpha = 0.5, color = "black") +
+scale_fill_manual(values = my_palette, labels = c("Under 21", "21-25", "25-30", "30-35", "35-40", "40-45", "45-50", "50-55", "55-60", "Over 60")) +
+scale_x_discrete(limits=c("teens", "earlytwens", "latetwens", "earlythirs", "latethirs", "earlyfors", "latefors", "earlyfifs", "latefifs", "sixties")) +
+facet_grid(culture ~ ., scales = "free_y", space = "free", labeller = labeller(culture = c(`0` = "Euro-Australian", `1` = "Malaysian"))) +
+scale_y_continuous(limits = c(0, 14), breaks = seq(0, 14, by = 2.5)) +
+labs(title = "Brooding by Age Category and Culture",
+x = NULL,
+y = "Average Brooding Total",
+fill = "Age Category") +
+theme(plot.title = element_text(size = 12, face = "bold"),
+plot.subtitle = element_text(size = 10),
+axis.title = element_text(size = 10),
+axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+
+```
+
+
+```{r}
+```
+
+
+```{r}
+dep %>% 
+  na.omit() %>% 
+  group_by(culture, depression_total) %>% 
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>% 
+  ggplot(aes(x = depression_total, y = avg_brood, fill = factor(culture))) +
+  geom_col(position = "dodge", alpha = 0.6) +
+  scale_fill_manual(values = my_palette, labels = c("Euro-Australian", "Malaysian")) +
+  labs(title = "Brooding by Depression Level and Culture",
+       x = "Depression Level",
+       y = "Brooding Total",
+       fill = "Culture") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 8))
+
+
+```
+
+
+```{r}
+dep %>% 
+  na.omit() %>% 
+  group_by(culture, anxiety_total) %>% 
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>% 
+  ggplot(aes(x = anxiety_total, y = avg_brood, fill = factor(culture))) +
+  geom_col(position = "dodge", alpha = 0.6) +
+  scale_fill_manual(values = my_palette, labels = c("Euro-Australian", "Malaysian")) +
+  labs(title = "Brooding by Anxiety Level and Culture",
+       x = "Anxiety Level",
+       y = "Brooding Total",
+       fill = "Culture") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 8))
+
+
+```
+
+```{r}
+
+
+
+
+```
+
+
+
+```{r}
+
+```
+
+```{r}
+
+
+```
+
+
+```{r}
+dep %>% 
+  group_by(culture) %>% 
+  na.omit() %>% 
+  summarize(avg_brood = mean(brooding_total), avg_dep = mean(depression_total), avg_anx = mean(anxiety_total)) %>% 
+  ggplot(aes(x = avg_dep , y = avg_brood, fill = culture))+
+  geom_col(alpha=0.5)+
+  scale_fill_manual(values=my_palette)+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
+  labs(title = "Brooding by Culture",
+       x = "Culture",
+       y = "Average Brooding",
+       fill = "Culture")
+
+```
+
+```{r}
+levels(dep$age_cat)
+
+```
+
+
+```{r}
+glimpse(ptsd)
+```
+
+
+
+
+```{r}
+glimpse(ptsd)
+```
+
+```{r}
+names(ptsd)
+```
+
+
