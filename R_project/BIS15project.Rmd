@@ -1,0 +1,421 @@
+Based on 2022 paper, 'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0278328' Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
+
+-overall rumination rates
+ -difference by age... to overal rumination rates (brooding total)
+ 
+ Facet by culture(only 2 diff cultures mala and euro australian)
+              
+                income
+                age
+              *trauma type (for PTSD)
+                
+                Mine to do:
+                religion 
+                gender
+                education(on a 1-5 scale )
+                
+Gender:              
+ M=1
+ F=2
+Declined to state  =5  
+
+Culture:  
+Australian = 0
+Malaysian = 1
+
+Education (Highest level achieved):
+Secondary = 1
+Post-secondary = 2
+Undergrad degree = 3
+Graduate degree = 4
+Other = 5
+
+Religion code (for depression dataset):
+None = 1
+Christian = 2
+Muslim = 3
+Buddhist/Taoist = 4
+Hindu = 5
+Other (incl Sikh, Agnostic) = 6
+
+Index trauma type (what the PTSD is thought to be in response to; for PTSD dataset):
+Accident/serious injury/illness = 1
+Non-sexual assault/abuse = 2
+Sexual assault/abuse = 3
+Witnessing death = 4
+War/natural disaster = 5
+Other = 6                
+
+
+
+ptsd data >> DO NOT LOOK AT "HADS"
+>we want to look at pts (pcl 1 is q 1) total and if that value is above a certian value, then they have ptsd>> mutate boolean t/f 
+>rrs is the brooding score sum the total and *maybe* append to depress to see total brooding score with depress  
+
+So we are looking at rumination rates in the Y axis, and X axis is relig, gender, education...
+and we have a facet of culture
+```{r}
+library(here)
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(skimr)
+
+```
+
+```{r}
+depress<-read_csv(here("R_project", "Rumination Depression.csv")) %>% clean_names
+```
+
+
+```{r}
+post_disorder<-read_csv(here("R_project","Rumination PTSD.csv")) %>% clean_names
+```
+
+```{r}
+glimpse(ptsd)
+```
+
+```{r}
+naniar::miss_var_summary(depress)
+```
+
+
+```{r}
+glimpse(post_disorder)
+```
+
+
+```{r}
+naniar::miss_var_summary(ptsd)
+```
+Making the dataset readable
+
+```{r}
+
+#write.csv( d, "Depression_data", row.names=FALSE)
+
+d<-depress %>% 
+  select(-age,-brooding_total,-anxiety_total,-depression_total) %>% 
+  mutate_if(is.numeric,as.character )
+d<-d %>% mutate(age=depress$age)
+d<-d %>% mutate(brooding_total=depress$brooding_total)
+d<-d %>% mutate(anxiety_total=depress$anxiety_total)
+d<-d %>% mutate(depression_total=depress$depression_total)
+new_education<-d %>% select(education) %>% 
+mutate_if( is.character, as.factor)
+
+```
+  To their names
+```{r}
+
+  
+d["culture"][d["culture"]==0]<-"Australian"
+d["culture"][d["culture"]==1]<-"Malaysian"  
+d["gender"][d["gender"]==1]<-"M"
+d["gender"][d["gender"]==2]<-"F"
+d["gender"][d["gender"]==5]<-"Declined to State"
+d["education"][d["education"]==1]<-"Secondary"
+d["education"][d["education"]==2]<-"Post-secondary"
+d["education"][d["education"]==3]<-"Undergrad degree"
+d["education"][d["education"]==4]<-"Graduate degree"
+d["education"][d["education"]==5]<-"Other"
+d["religion_coded"][d["religion_coded"]==1]<-"None"
+d["religion_coded"][d["religion_coded"]==2]<-"Christian"
+d["religion_coded"][d["religion_coded"]==3]<-"Muslim"
+d["religion_coded"][d["religion_coded"]==4]<-"Buddhist/Taoist"
+d["religion_coded"][d["religion_coded"]==5]<-"Hindu"
+d["religion_coded"][d["religion_coded"]==6]<-"Other (incl Sikh, Agnostic)"
+d<-d %>% 
+  select(-education) %>% mutate(education=new_education$education)
+d
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Debugging:
+
+
+Based on 2022 paper, "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0278328" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
+Brooding/RRS rates & culture with: 
+
+Akshanth:      religion, gender, education(1-5; change to factors) 
+
+JKA:           depression, anxiety, age, trauma type for PTSD
+
+
+----------------------------------------------------------------------------------------------
+
+Data codes for variables of interest from paper:
+
+For both: First 109 participant ids are Euro-Australian, next 144 are Malaysian
+
+For depression data:
+
+2 Cultures:  0,1 = Euro-Australian, Malaysian (convert to factors)
+
+Gender (convert to factors):              
+ M = 1
+ F = 2
+Declined to state = 5  
+
+Education (Highest level achieved):
+Secondary = 1
+Post-secondary = 2
+Undergrad degree = 3
+Graduate degree = 4
+Other = 5
+
+Religion codes:
+None = 1
+Christian = 2
+Muslim = 3
+Buddhist/Taoist = 4
+Hindu = 5
+Other (incl Sikh, Agnostic) = 6
+
+PTSD dataset:
+
+Culture = Groups 1,2  = Euro-Australian, Malaysian (change to factors)
+
+Index trauma type (what the PTSD is thought to be in response to):
+
+Accident/serious injury/illness = 1
+Non-sexual assault/abuse = 2
+Sexual assault/abuse = 3
+Witnessing death = 4
+War/natural disaster = 5
+Other = 6       
+
+HADS = Hospital Anxiety and Depression Scale: 
+
+had_sdep = depression subscale total
+had_sanx = anxiety subscale total
+had_stotal = overall HADS total
+
+pts_dtotal = overall score on PTSD assessment scale
+
+RRS-B = Brooding scale - want sum of all RRS scores
+
+```{r}
+library(here)
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(skimr)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(paletteer)
+```
+```{r}
+my_palette <- paletteer::paletteer_d(("ggprism::colors"))
+```
+
+```{r}
+dep<-read_csv("jka_r_project/rum_depress_jka.csv") %>% clean_names
+```
+
+```{r}
+ptsd<-read_csv("jka_r_project/rum_ptsd_jka.csv") %>% clean_names
+```
+
+```{r}
+glimpse(dep)
+```
+
+````{r}
+dep$culture <- as.factor(dep$culture)
+class(dep$culture)
+```
+
+
+```{r}
+dep %>% 
+  filter(culture==0) %>% 
+  summarize(max_age = max(age, na.rm =T),
+            min_age = min(age,na.rm =T),
+            avg_age = mean(age,na.rm =T),
+            total = n())
+```
+
+```{r}
+dep %>% 
+  filter(culture==1) %>% 
+  summarize(max_age = max(age, na.rm =T),
+            min_age = min(age,na.rm =T),
+            avg_age = mean(age,na.rm =T),
+            total = n())
+```
+
+```{r}
+dep <- dep %>% 
+  mutate(age_cat = case_when(age < 21 ~ "teens",
+                             age >= 21 & age < 25 ~ "earlytwens",
+                             age >= 25 & age < 30 ~ "latetwens",
+                             age >= 30 & age < 35 ~ "earlythirs",
+                             age >= 35 & age < 40 ~ "latethirs",
+                             age >= 40 & age < 45 ~ "earlyfors",
+                             age >= 45 & age < 50 ~ "latefors",
+                             age >= 50 & age < 55 ~ "earlyfifs",
+                             age >= 55 & age < 60 ~ "latefifs",
+                             age >= 60 ~ "sixties"))
+```
+
+```{r}
+dep %>%
+  na.omit() %>%
+  group_by(culture, age_cat) %>%
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
+  select(culture, age_cat, avg_brood)
+```
+
+
+
+
+```{r}
+dep %>%
+na.omit() %>%
+group_by(age_cat, culture) %>%
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
+ggplot(aes(x = age_cat, y = avg_brood, fill = age_cat)) +
+geom_col(position = "dodge", alpha = 0.5, color = "black") +
+scale_fill_manual(values = my_palette, labels = c("Under 21", "21-25", "25-30", "30-35", "35-40", "40-45", "45-50", "50-55", "55-60", "Over 60")) +
+scale_x_discrete(limits=c("teens", "earlytwens", "latetwens", "earlythirs", "latethirs", "earlyfors", "latefors", "earlyfifs", "latefifs", "sixties")) +
+facet_grid(culture ~ ., scales = "free_y", space = "free", labeller = labeller(culture = c(`0` = "Euro-Australian", `1` = "Malaysian"))) +
+scale_y_continuous(limits = c(0, 14), breaks = seq(0, 14, by = 2.5)) +
+labs(title = "Brooding by Age Category and Culture",
+x = NULL,
+y = "Average Brooding Total",
+fill = "Age Category") +
+theme(plot.title = element_text(size = 12, face = "bold"),
+plot.subtitle = element_text(size = 10),
+axis.title = element_text(size = 10),
+axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+
+```
+
+
+```{r}
+```
+
+
+```{r}
+dep %>% 
+  na.omit() %>% 
+  group_by(culture, depression_total) %>% 
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>% 
+  ggplot(aes(x = depression_total, y = avg_brood, fill = factor(culture))) +
+  geom_col(position = "dodge", alpha = 0.6) +
+  scale_fill_manual(values = my_palette, labels = c("Euro-Australian", "Malaysian")) +
+  labs(title = "Brooding by Depression Level and Culture",
+       x = "Depression Level",
+       y = "Brooding Total",
+       fill = "Culture") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 8))
+
+
+```
+
+
+```{r}
+dep %>% 
+  na.omit() %>% 
+  group_by(culture, anxiety_total) %>% 
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>% 
+  ggplot(aes(x = anxiety_total, y = avg_brood, fill = factor(culture))) +
+  geom_col(position = "dodge", alpha = 0.6) +
+  scale_fill_manual(values = my_palette, labels = c("Euro-Australian", "Malaysian")) +
+  labs(title = "Brooding by Anxiety Level and Culture",
+       x = "Anxiety Level",
+       y = "Brooding Total",
+       fill = "Culture") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 8))
+
+
+```
+
+```{r}
+
+
+
+
+```
+
+
+
+```{r}
+
+```
+
+```{r}
+
+
+```
+
+
+```{r}
+dep %>% 
+  group_by(culture) %>% 
+  na.omit() %>% 
+  summarize(avg_brood = mean(brooding_total), avg_dep = mean(depression_total), avg_anx = mean(anxiety_total)) %>% 
+  ggplot(aes(x = avg_dep , y = avg_brood, fill = culture))+
+  geom_col(alpha=0.5)+
+  scale_fill_manual(values=my_palette)+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
+  labs(title = "Brooding by Culture",
+       x = "Culture",
+       y = "Average Brooding",
+       fill = "Culture")
+
+```
+
+```{r}
+levels(dep$age_cat)
+
+```
+
+
+```{r}
+glimpse(ptsd)
+```
+
+
+
+
+```{r}
+glimpse(ptsd)
+```
+
+```{r}
+names(ptsd)
+```
+
+
+
