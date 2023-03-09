@@ -38,7 +38,7 @@ Buddhist/Taoist = 4
 Hindu = 5
 Other (incl Sikh, Agnostic) = 6
 
-Index trauma type (what the PTSD is thought to be in response to; for PTSD dataset):
+Index trauma type (what the PTSD is thought to be in response to; for PTSD dataset)():
 Accident/serious injury/illness = 1
 Non-sexual assault/abuse = 2
 Sexual assault/abuse = 3
@@ -46,6 +46,10 @@ Witnessing death = 4
 War/natural disaster = 5
 Other = 6                
 
+
+NOT LOOKING AT PCL stuff
+hads-> hospital test thingy
+we are only looking at hads anxiety and hads depression and the total for RRS
 
 
 ptsd data >> DO NOT LOOK AT "HADS"
@@ -126,11 +130,40 @@ d["religion_coded"][d["religion_coded"]==3]<-"Muslim"
 d["religion_coded"][d["religion_coded"]==4]<-"Buddhist/Taoist"
 d["religion_coded"][d["religion_coded"]==5]<-"Hindu"
 d["religion_coded"][d["religion_coded"]==6]<-"Other (incl Sikh, Agnostic)"
-d<-d %>% 
-  select(-education) %>% mutate(education=new_education$education)
+# d<-d %>% 
+#   select(-education) %>% mutate(education=new_education$education)
 d
 ```
 
+```{r}
+names(d ) 
+```
+
+```{r}
+d %>% 
+  filter(!is.na(age)) %>% 
+  ggplot(aes(x=age, y= brooding_total, fill=culture))+geom_col(na.rm=T)+facet_wrap(culture~.)
+```
+```{r}
+d %>% 
+  filter(!is.na(age)) %>% 
+  ggplot(aes(x=gender, y= brooding_total, fill=culture))+geom_col(na.rm=T)+facet_wrap(culture~.)
+```
+```{r}
+d %>% 
+  filter(!is.na(age)) %>% 
+  ggplot(aes(x=religion_coded, y= brooding_total, fill=education))+geom_col(na.rm=T, position = "dodge")+facet_wrap(culture~.)
+```
+
+```{r}
+install.packages("flexdashboard", type = "source")
+```
+
+
+```{r}
+library(flexdashboard)
+
+```
 
 
 
@@ -340,7 +373,7 @@ dep %>%
 
 
 ```{r}
-dep %>% 
+d%>% 
   na.omit() %>% 
   group_by(culture, anxiety_total) %>% 
   summarize(avg_brood = mean(brooding_total, na.rm = T)) %>% 
@@ -360,11 +393,27 @@ dep %>%
 ```
 
 ```{r}
+#view(ptsd)
 
+  
+ 
+ptsd_new<-ptsd %>%
+    rowwise() %>% 
+    mutate(sum_rrs = sum(c_across(starts_with("rrs")), na.rm = T)) 
 
+ggplot(mapping=ptsdaes(x = ))
+
+VERY_NEW_PTSD %>% select(sum_rrs)
 
 
 ```
+NOT LOOKING AT PCL stuff
+hads-> hospital test thingy
+we are only looking at hads anxiety and hads depression and the total for RRS
+```{r}
+
+```
+
 
 
 
