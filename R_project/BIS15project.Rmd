@@ -132,6 +132,18 @@ d["religion_coded"][d["religion_coded"]==5]<-"Hindu"
 d["religion_coded"][d["religion_coded"]==6]<-"Other (incl Sikh, Agnostic)"
 # d<-d %>% 
 #   select(-education) %>% mutate(education=new_education$education)
+
+d <- d %>% 
+  mutate(age_cat = case_when(age < 21 ~ "teens",
+                             age >= 21 & age < 25 ~ "earlytwens",
+                             age >= 25 & age < 30 ~ "latetwens",
+                             age >= 30 & age < 35 ~ "earlythirs",
+                             age >= 35 & age < 40 ~ "latethirs",
+                             age >= 40 & age < 45 ~ "earlyfors",
+                             age >= 45 & age < 50 ~ "latefors",
+                             age >= 50 & age < 55 ~ "earlyfifs",
+                             age >= 55 & age < 60 ~ "latefifs",
+                             age >= 60 ~ "sixties"))
 d
 ```
 
@@ -142,8 +154,26 @@ names(d )
 ```{r}
 d %>% 
   filter(!is.na(age)) %>% 
-  ggplot(aes(x=age, y= brooding_total, fill=culture))+geom_col(na.rm=T)+facet_wrap(culture~.)
+  ggplot(aes(x=brooding_total, y=age , fill=culture))+geom_dotplot(binaxis = "y",stackdir = "center", na.rm=T, binwidth = 1.000000000000001)+facet_wrap(culture~.)+coord_flip()
 ```
+```{r}
+d %>% 
+  filter(!is.na(age)) %>% 
+  ggplot(aes(x=age, y=brooding_total , color=culture))+geom_point(na.rm = T)+facet_wrap(culture~.)
+```
+
+```{r}
+d %>% 
+  filter(!is.na(age)) %>% 
+  ggplot(aes(x=age, y=brooding_total , fill=culture))+geom_col(na.rm = T)+facet_wrap(culture~.)
+```
+```{r}
+d %>% 
+  filter(!is.na(age)) %>% 
+ ggplot(aes(x=age, fill=culture))+geom_histogram(binwidth = 10, color="black")+facet_wrap(culture~.)
+```
+
+
 ```{r}
 d %>% 
   filter(!is.na(age)) %>% 
@@ -152,17 +182,51 @@ d %>%
 ```{r}
 d %>% 
   filter(!is.na(age)) %>% 
-  ggplot(aes(x=religion_coded, y= brooding_total, fill=education))+geom_col(na.rm=T, position = "dodge")+facet_wrap(culture~.)
+  ggplot(aes(x=religion_coded, y= brooding_total, fill=education))+geom_col(na.rm=T, position = "dodge")+facet_wrap(culture~.)+coord_flip()
 ```
 
 ```{r}
-install.packages("flexdashboard", type = "source")
+#install.packages("flexdashboard", type = "source")
 ```
 
 
 ```{r}
 library(flexdashboard)
+```
 
+
+
+```{r}
+d %>% 
+  filter(!is.na(culture)) %>% 
+  ggplot(aes(x=depression_total, y=brooding_total, fill=culture))+geom_smooth(method=lm, na.rm = T)+facet_wrap(culture~.)
+      
+```
+
+```{r}
+d %>% 
+  filter(!is.na(culture)) %>% 
+  ggplot(aes(x=anxiety_total, y=brooding_total, fill=culture))+geom_smooth( )+facet_wrap(culture~.)
+```
+```{r}
+new_ptsd<-ptsd %>% 
+  select(contains("rrs"), names(ptsd)) %>% 
+  rowwise() %>% 
+  mutate(sum_rrs = sum(c_across(starts_with("rrs")), na.rm = T)) 
+```
+
+```{r}
+new_ptsd %>% 
+  ggplot(aes(x=traumacoding, y=sum_rrs))+geom_col()
+```
+```{r}
+new_ptsd %>% 
+  ggplot(aes(x=had_sanx, y=sum_rrs))+geom_point()
+
+```
+```{r}
+new_ptsd %>% 
+  ggplot(aes(x=had_sdep, y=sum_rrs))+geom_point()
 ```
 
 
@@ -171,17 +235,7 @@ library(flexdashboard)
 
 
 
-
-
-
-
-
-
-
-
-
-
-Debugging:
+##Debugging:
 
 
 Based on 2022 paper, "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0278328" Does culture moderate relationships between rumination and symptoms of depression and PTSD? 
@@ -317,6 +371,15 @@ dep %>%
   summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
   select(culture, age_cat, avg_brood)
 ```
+```{r}
+dep %>%
+  na.omit() %>%
+  group_by(culture, age_cat) %>%
+  summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
+  select(culture, age_cat, avg_brood) %>% 
+ggplot( aes(x=age_cat,y=avg_brood))+geom_col()+facet_wrap(culture~.)+coord_flip()
+```
+
 
 
 
@@ -327,7 +390,7 @@ na.omit() %>%
 group_by(age_cat, culture) %>%
   summarize(avg_brood = mean(brooding_total, na.rm = T)) %>%
 ggplot(aes(x = age_cat, y = avg_brood, fill = age_cat)) +
-geom_col(position = "dodge", alpha = 0.5, color = "black") +
+geom_col( alpha = 0.5, color = "black") +
 scale_fill_manual(values = my_palette, labels = c("Under 21", "21-25", "25-30", "30-35", "35-40", "40-45", "45-50", "50-55", "55-60", "Over 60")) +
 scale_x_discrete(limits=c("teens", "earlytwens", "latetwens", "earlythirs", "latethirs", "earlyfors", "latefors", "earlyfifs", "latefifs", "sixties")) +
 facet_grid(culture ~ ., scales = "free_y", space = "free", labeller = labeller(culture = c(`0` = "Euro-Australian", `1` = "Malaysian"))) +
@@ -397,11 +460,11 @@ d%>%
 
   
  
-ptsd_new<-ptsd %>%
+VERY_NEW_PTSD<-ptsd %>%
     rowwise() %>% 
     mutate(sum_rrs = sum(c_across(starts_with("rrs")), na.rm = T)) 
 
-ggplot(mapping=ptsdaes(x = ))
+
 
 VERY_NEW_PTSD %>% select(sum_rrs)
 
