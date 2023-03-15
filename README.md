@@ -8,7 +8,7 @@ absrivatsa@ucdavis.edu
 
 anything that has a "lab" infront of it, is part of the school work. Has information about the lab inside each of the markdown files
 Homeworks are appropriately labelled
-#exams
+# exams
 In class exams. These were done timed.
 # R project
 
