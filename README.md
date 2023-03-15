@@ -4,7 +4,7 @@ Bis15L's lab repository
 There are 15 labs in this repository and 1 final class project
 # Contact
 absrivatsa@ucdavis.edu
-#labs
+# labs
 
 anything that has a "lab" infront of it, is part of the school work. Has information about the lab inside each of the markdown files
 Homeworks are appropriately labelled
