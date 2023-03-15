@@ -150,6 +150,7 @@ d %>%
   filter(!is.na(age)) %>% 
   ggplot(aes(x=gender, y= brooding_total, fill=culture))+geom_col(na.rm=T)+facet_wrap(culture~.)+labs(title="Gender versus Brooding Total")
 ```
+
 ## How does Religion and Education level affect Brooding Scores?
 
 ```{r}
@@ -188,6 +189,7 @@ d %>%
   filter(!is.na(religion_coded)&religion_coded=="Hindu") %>% 
     ggplot(aes(x=religion_coded, y= brooding_total, fill=education)) +geom_col(na.rm=T, position = "dodge") +facet_wrap(culture~.)+coord_flip()+labs(title="Brooding Score versus Religion: Hindu")
 ```
+
 ## How does Depression Scores affect Brooding scores?
 
 
@@ -198,7 +200,319 @@ d %>%
       
 ```
 
+## How does Depression Scores affect Brooding scores?
+
+```{r}
+d %>% 
+  filter(!is.na(culture)) %>% 
+  ggplot(aes(x=anxiety_total, y=brooding_total, fill=culture))+geom_smooth( method = "loess", formula = "y~x")+facet_wrap(culture~.)+labs(title="Curve of Sum of Anxiety Scores versus their Brooding Scores")
+```
+
+## Graphically, how does that compare amongst different groups?
+
+```{r, include=FALSE}
+my_palette <- paletteer::paletteer_d(("ggprism::colors"))
+```
+
+```{r, include=FALSE}
+dep<-read_csv("jka_r_project/rum_depress_jka.csv") %>% 
+            clean_names 
+```
+
+```{r, include=FALSE}
+dp2 <- dep %>%
+group_by(culture, depression_total) %>%
+  summarize(avg_brood = mean(brooding_total, na.rm = T), .groups ="keep") %>%
+  select(culture, depression_total, avg_brood)
+  
+dp2$depression_total <- factor(dp2$depression_total)
+```
+
+
+```{r}
+dp2 %>% 
+  filter(!is.na(depression_total)) %>% 
+  ggplot(aes(x = depression_total, y = avg_brood, fill = depression_total)) +
+  geom_col(alpha = 0.5, color = "black")+
+  facet_grid(culture ~ .,
+             scales = "free_y", 
+             space = "free", 
+             labeller = labeller(culture = c(`0` = "Euro-Australian", `1` = "Malaysian")))+ 
+  ylim(0,18)+
+labs(title = "Brooding by Depression Level and Culture",
+       x = "Total Depression Score",
+       y = "Average Brooding Score",
+       fill = "Total Depression Score") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 8))
+```
+
+
+## How about Anxiety level?
+
+
+```{r, include=FALSE}
+danx <- dep %>% 
+  group_by(culture, anxiety_total) %>% 
+  summarize(avg_brood = mean(brooding_total, na.rm = T), .groups ="keep")
+
+danx$anxiety_total <- factor(danx$anxiety_total)
+```
+
+```{r}
+danx <- danx %>% 
+  filter(!is.na(anxiety_total) & 
+         !is.na(avg_brood) & 
+         !is.na(culture))
+
+danx <- danx[-35,]
+
+ggplot(danx, aes(x = anxiety_total, y = avg_brood, fill = anxiety_total)) +
+  geom_col(alpha = 0.5, color = "black") +
+  facet_grid(culture ~ .,
+             scales = "free_y", 
+             space = "free", 
+             labeller = labeller(culture = c(`0` = "Euro-Australian", `1` = "Malaysian")))+ 
+  scale_y_continuous(limits = c(0, 20))+
+   labs(title = "Brooding by Anxiety Level and Culture",
+  x = "Total Anxiety Score",
+  y = "Average Brooding Score",
+  fill = "Total Anxiety Score") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 8))
+```
+
+
+## PTSD values
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd<- read_csv("jka_r_project/rum_ptsd_jka.csv") %>% 
+  clean_names 
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_long <- ptsd %>%
+  pivot_longer(cols = -c(participantnumber, timecode, had_stotal, age, gender, education, ethnicity, relgion, religioncode, group, traumacoding, pts_dtotal, had_sdep, had_sanx),
+    names_to = "scale",
+    values_to = "score",
+    names_pattern = "(.*)"
+  )
+```
+
+
+```{r, include=FALSE, echo=FALSE}
+ptsd_long <- ptsd_long %>%
+  separate(scale, into = c("test", "q"), sep = "(?<=\\D)(?=\\d)", convert = TRUE)
+ptsd_long
+```
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_long$id <- paste(ptsd_long$group, ptsd_long$participantnumber, sep = "_")
+```
+
+```{r, include=FALSE, echo=FALSE}
+ptsd_rrs_sum <- ptsd_long %>%
+  filter(test == "rrs") %>%
+ filter(!is.na(score)) %>%
+ group_by(id) %>%
+ summarise(rrs_sum = sum(score))
+ptsd_rrs_sum
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep <- ptsd_rrs_sum %>% 
+  separate (id, into = c("group", "participantnumber"), sep = "_", convert = TRUE) 
+ptsd_sum_sep  
+```
+
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep$group <- as.factor(ptsd_sum_sep$group)
+ptsd_sum_sep$participantnumber <- as.factor(ptsd_sum_sep$participantnumber)
+ptsd_sum_sep$rrs_sum <- as.factor(ptsd_sum_sep$rrs_sum)
+ptsd_long$participantnumber <- as.factor(ptsd_long$participantnumber)
+```
+
+```{r, echo=FALSE, include=FALSE}
+# Get unique values of group and participantnumber
+unique_groups <- unique(ptsd_sum_sep$group)
+unique_participants <- unique(ptsd_sum_sep$participantnumber)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# remove duplicates from ptsd_sum_sep
+ptsd_sum_sep <- distinct(ptsd_sum_sep, participantnumber, .keep_all = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+# remove duplicates from ptsd_long
+ptsd_long <- distinct(ptsd_long, participantnumber, had_sdep, .keep_all = TRUE)
+glimpse(ptsd_long)
+```
 
 
 
 
+```{r, echo=FALSE, include=FALSE}
+# join the datasets
+ptsd_sum_sep <- left_join(ptsd_long, ptsd_sum_sep, by = "participantnumber")
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep$group.x <- factor(ptsd_sum_sep$group.x)
+class(ptsd_sum_sep$group.x)
+```
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep <- ptsd_sum_sep %>% 
+  rename(group = group.x) %>% 
+  slice(-220)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_t1 <- ptsd_long %>% 
+  filter(between(as.numeric(as.character(traumacoding)), 1, 6)) %>% 
+  mutate(index_t = case_when (traumacoding == 1 ~ "AI",
+                              traumacoding == 2 ~ "NSA",
+                              traumacoding == 3 ~ "SA",
+                              traumacoding == 4 ~ "CD",
+                              traumacoding == 5 ~ "WND",
+                              traumacoding == 6 ~ "OTH"))
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep$participantnumber <- as.factor(ptsd_sum_sep$participantnumber)
+class(ptsd_sum_sep$participantnumber)
+```
+
+
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep <- distinct(ptsd_sum_sep, participantnumber, .keep_all = TRUE)
+ptsd_t1 <- distinct(ptsd_t1, participantnumber, .keep_all = TRUE)
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep <- left_join(ptsd_sum_sep, ptsd_t1 %>% 
+                             select(participantnumber, index_t), by = "participantnumber")
+```
+
+
+```{r}
+ggplot(ptsd_sum_sep[!is.na(ptsd_sum_sep$index_t),], aes(x = index_t, y = as.numeric(rrs_sum), color = factor(index_t))) +
+  geom_point(size = 1) +
+  scale_color_manual(values = my_palette) +
+  scale_color_discrete(labels = c(
+      "Accident/Injury/Illness",
+      "Non-sexual Abuse",
+      "Sexual Abuse",
+      "Witnessing Death",
+      "War/Natural disaster",
+      "Other")) +
+  facet_grid(group ~ .,
+             scales = "free_y", 
+             space = "free", 
+             labeller = labeller(group = c(`1` = "Euro-Australian", `2` = "Malaysian")))+ 
+  scale_x_discrete(labels = c(
+      "AI",
+      "NSA",
+      "SA",
+      "CD",
+      "WND",
+      "OTH"), limits = c(
+      "AI",
+      "NSA",
+      "SA",
+      "CD",
+      "WND",
+      "OTH")) +
+  ylim(0,40)+
+  labs(title = "Brooding by Initial Trauma and Culture, PTSD",
+  x = "Initial Trauma",
+  y = "Total Brooding Score") + 
+  labs(color = "Initial Trauma Type", fill = "Initial Trauma") +
+  theme(plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 8))
+
+```
+
+
+## PTSD level and Culture
+
+
+```{r, echo=FALSE, include=FALSE}
+ptsd_sum_sep <- ptsd_sum_sep %>% 
+  mutate(ptsdlev = case_when(pts_dtotal <= 10 ~ "Unnoticeable",
+                             pts_dtotal >= 11 & pts_dtotal < 20 ~ "Very Mild",
+                             pts_dtotal >= 21 & pts_dtotal < 30 ~ "Mild",
+                             pts_dtotal >= 31 & pts_dtotal < 40 ~ "Significant",
+                             pts_dtotal >= 41 & pts_dtotal < 50 ~ "Marked",
+                             pts_dtotal >= 51 & pts_dtotal < 60 ~ "Very Marked",
+                             pts_dtotal >= 60 ~ "Severe"))
+```
+
+
+```{r}
+ptsd_sum_sep$ptsdlev <- factor(ptsd_sum_sep$ptsdlev, levels = c("Unnoticeable", "Very Mild", "Mild", "Moderate", "Significant", "Marked", "Severe"))
+ggplot(ptsd_sum_sep[!is.na(ptsd_sum_sep$ptsdlev),], aes(x = ptsdlev, y = as.numeric(rrs_sum), color = factor(ptsdlev))) +
+  geom_point(size = 1) +
+  scale_color_manual(values = my_palette) +
+ scale_color_discrete(breaks = c(
+  "Unnoticeable",
+  "Very Mild",
+  "Mild",
+  "Moderate",
+  "Significant",
+  "Marked",
+  "Severe"),
+    labels = c(
+  "Unnoticeable",
+  "Very Mild",
+  "Mild",
+  "Moderate",
+  "Significant",
+  "Marked",
+  "Severe"
+))+
+   facet_grid(group ~ ., scales = "free_y", space = "free", 
+             labeller = labeller(group = c(`1` = "Euro-Australian", `2` = "Malaysian"))) + 
+   ylim(0, 45) +
+  labs(title = "Brooding by PTSD Level and Culture, PTSD",
+       x = "PTSD Level",
+       y = "Total Brooding Score",
+       color = "PTSD Level",
+       fill = "PTSD Level") + 
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 8))
+
+
+```
+
+
+
+
+## Conclusion
+
+-What are the correlations between the variables (religion, age, education, axiety level, depression level, culture) on the brooding levels?
+      
+      -Brooding levels tend to have a positive correlation with the above variables 
+      
+-What does that mean for Brooding levels?

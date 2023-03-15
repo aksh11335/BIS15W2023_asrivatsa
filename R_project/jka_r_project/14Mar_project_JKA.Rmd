@@ -83,6 +83,7 @@ my_palette <- paletteer::paletteer_d(("ggprism::colors"))
 dep<-read_csv("/Users/jkabrams/Desktop/BIS15W2023_jabrams-main/jka_r_project/rum_depress_jka.csv") %>% 
             clean_names 
 ```
+
 ```{r}
 names(dep)
 ```

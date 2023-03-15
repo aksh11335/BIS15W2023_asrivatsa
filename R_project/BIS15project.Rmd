@@ -84,7 +84,7 @@ post_disorder<-read_csv(here("R_project","Rumination PTSD.csv")) %>% clean_names
 ```
 
 ```{r}
-glimpse(ptsd)
+#glimpse(post_disorder)
 ```
 
 ```{r}
@@ -98,7 +98,7 @@ glimpse(post_disorder)
 
 
 ```{r}
-naniar::miss_var_summary(ptsd)
+#naniar::miss_var_summary(ptsd)
 ```
 Making the dataset readable
 
@@ -151,7 +151,7 @@ d <- d %>%
                              age >= 50 & age < 55 ~ "earlyfifs",
                              age >= 55 & age < 60 ~ "latefifs",
                              age >= 60 ~ "sixties"))
-d
+
 ```
 
 ```{r}
@@ -184,7 +184,7 @@ d %>%
 ```{r}
 d %>% 
   filter(!is.na(age)) %>% 
-  ggplot(aes(x=gender, y= brooding_total, fill=culture))+geom_col(na.rm=T)+facet_wrap(culture~.)+labs(title="Gender versus Brooding Total")
+  ggplot(aes(x=gender, y= brooding_total, fill=culture))+geom_col(na.rm=T, color="black")+facet_wrap(culture~.)+labs(title="Gender versus Brooding Total")
 ```
 ```{r}
 d %>% 
